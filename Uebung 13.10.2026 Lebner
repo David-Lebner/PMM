@@ -1,0 +1,11 @@
+library(ggplot2)
+library(palmerpenguins)
+
+data(penguins)
+
+ggplot(penguins, aes(x = year, y = body_mass_g)) +
+  geom_smooth() +
+  labs(
+    x = "Jahr",
+    y = "Körpermasse (g)"
+  )
