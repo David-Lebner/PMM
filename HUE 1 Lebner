@@ -1,0 +1,56 @@
+library(tidyverse)
+library(palmerpenguins)
+
+ggplot(penguins,
+       aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  labs(x = "Flossengröße (mm)", y = "Körpermasse (g)",
+       title = "Lange Flosse, schwerer Körper")
+
+ggplot(penguins,
+       aes(x = flipper_length_mm, y = body_mass_g))
+
+ggplot(penguins,
+       aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+
+ggplot(penguins,
+       aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  labs(x = "Flossengröße (mm)", y = "Körpermasse (g)")
+
+ggplot(penguins,
+       aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  facet_wrap(~ species)
+
+ggplot(penguins,
+       aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Flossengröße (mm)", y = "Körpermasse (g)")
+
+# Verteilung: Wie hoch wiegen die Pinguine?
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 250) +
+  labs(x = "Körpermasse (g)", y = "Anzahl Pinguine")
+
+# Kategorien: Wie viele pro Art?
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+
+# Skript = dein Labortagebuch: lesbar, wiederholbar, startbar
+gewicht <- c(3750, 3800, 3250)   # <- speichert (nicht = !)
+mean(gewicht)                     # → 3600
+
+# 1. Das + am Zeilenanfang — R sucht vergeblich das Vorherige
+ggplot(penguins, aes(x = body_mass_g))
++ geom_point()          # → Fehler! Plus gehört ans ZEILENENDE
+
+# 2. aes vergessen — R weiß nicht, was wohin soll
+ggplot(penguins) + geom_point(aes(y = body_mass_g))   # kein x → nichts zu sehen
+
+# 3. Farbe festgenagelt statt gemappt
+geom_point(color = "red")   # ALLE Punkte rot — keine Information, keine Legende
+
+
