@@ -1,0 +1,59 @@
+# ============================================================
+# Betriebsdaten: CSV einlesen -> als Excel (.xlsx) ausgeben
+# ============================================================
+
+# --- 1. Pakete (einmalig installieren, danach nur library) ----
+# install.packages(c("readr", "writexl", "openxlsx"))
+library(readr)     # CSV einlesen
+library(writexl)   # einfacher Excel-Export (ohne Java/Excel)
+
+# --- 2. Pfade (relativ zum R-Projekt-Ordner) ------------------
+# Annahme: Projektstruktur
+#   projekt/
+#   |-- daten/      <- Eingabe-CSV
+#   |-- output/     <- hier landet die Excel-Datei
+#   |-- csv_zu_excel.R
+eingabe_csv  <- "daten/betriebsdaten.csv"      # <- Dateinamen anpassen!
+ausgabe_xlsx <- "output/betriebsdaten.xlsx"
+
+# Ausgabeordner anlegen, falls er noch nicht existiert
+dir.create(dirname(ausgabe_xlsx), showWarnings = FALSE, recursive = TRUE)
+
+# --- 3. CSV einlesen ------------------------------------------
+# Deutsch/österreichisches Excel-CSV: Trennzeichen ";" und Dezimalkomma
+#   -> read_csv2()
+# Internationales CSV: Trennzeichen "," und Dezimalpunkt
+#   -> read_csv()
+betriebsdaten <- read_csv2(
+  eingabe_csv,
+  locale = locale(encoding = "UTF-8")   # bei Umlaut-Problemen: "Windows-1252"
+)
+
+# Kurzer Check, ob alles korrekt eingelesen wurde
+print(head(betriebsdaten))
+str(betriebsdaten)
+
+# --- 4. Als Excel ins Projekt zurückschreiben -----------------
+write_xlsx(betriebsdaten, path = ausgabe_xlsx)
+message("Excel-Datei geschrieben: ", normalizePath(ausgabe_xlsx))
+
+# --- 5. Optional: mehrere Blätter / Formatierung --------------
+# a) Mehrere Tabellenblätter mit writexl: benannte Liste übergeben
+# write_xlsx(
+#   list(Rohdaten = betriebsdaten,
+#        Kopf     = head(betriebsdaten, 10)),
+#   path = ausgabe_xlsx
+# )
+
+# b) Formatiert (Kopfzeile fett, Spaltenbreite, Filter) mit openxlsx
+# library(openxlsx)
+# wb <- createWorkbook()
+# addWorksheet(wb, "Betriebsdaten")
+# writeData(wb, "Betriebsdaten", betriebsdaten,
+#           headerStyle = createStyle(textDecoration = "bold",
+#                                     fgFill = "#D9E1F2"))
+# setColWidths(wb, "Betriebsdaten", cols = 1:ncol(betriebsdaten),
+#              widths = "auto")
+# addFilter(wb, "Betriebsdaten", row = 1, cols = 1:ncol(betriebsdaten))
+# freezePane(wb, "Betriebsdaten", firstRow = TRUE)
+# saveWorkbook(wb, ausgabe_xlsx, overwrite = TRUE)
