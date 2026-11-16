@@ -1,0 +1,13 @@
+library(readr)
+library(writexl)
+
+eingabe_csv  <- "daten/betriebsdaten.csv"
+ausgabe_xlsx <- "output/betriebsdaten.xlsx"
+
+dir.create(dirname(ausgabe_xlsx), showWarnings = FALSE, recursive = TRUE)
+
+betriebsdaten <- read_csv2(eingabe_csv, locale = locale(encoding = "UTF-8"))
+
+print(head(betriebsdaten))
+
+write_xlsx(betriebsdaten, path = ausgabe_xlsx)
